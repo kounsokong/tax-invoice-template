@@ -439,12 +439,12 @@
         }
       });
 
-      // Handle header image - using static URL (wrapped in try-catch to prevent blocking)
-      try {
+      // Handle header image
+      if (data.header_image) {
         const headerImg = document.getElementById('header_image');
         const headerPlaceholder = document.getElementById('header_placeholder');
         
-        headerImg.src = 'https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true';
+        headerImg.src = data.header_image;
         headerImg.style.display = 'block';
         headerPlaceholder.style.display = 'none';
         
@@ -454,8 +454,6 @@
           headerPlaceholder.style.display = 'block';
           headerPlaceholder.innerHTML = '<p>⚠️ Unable to load header image</p>';
         };
-      } catch (e) {
-        console.error('Error loading header image:', e);
       }
 
       // Handle line items (support multiple items)
