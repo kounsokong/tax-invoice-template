@@ -5,37 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tax Invoice - Angkobodia Logistics Co., Ltd</title>
   <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: "Khmer OS Battambang", Arial, sans-serif;
-      width: 210mm;
-      margin: 0 auto;
-      padding: 20px 0;
+      margin: 0;
+      padding: 0;
       color: #000;
       font-size: 13px;
       line-height: 1.4;
       background: #f5f5f5;
     }
 
-    .invoice-container {
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 0;
+      margin: 10mm auto;
       background: white;
-      padding: 10mm;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
     }
 
-    .header {
+    /* Header on every page */
+    .page-header {
+      width: 100%;
+      height: 120px;
       text-align: center;
-      margin-bottom: 10px;
+      padding: 10px 5mm;
+      background: white;
+      border-bottom: 1px solid #eee;
     }
 
-    .header img {
+    .page-header img {
       width: 100%;
       max-height: 110px;
       object-fit: contain;
     }
 
+    /* Content area below header */
+    .page-content {
+      padding: 5mm;
+    }
+
     .title {
       text-align: center;
-      margin: 10px 0;
+      margin: 6px 0;
     }
 
     .title h2 {
@@ -65,13 +87,13 @@
     .invoice-info {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .invoice-info .left {
       width: 60%;
       border: 1px solid #000;
-      padding: 8px;
+      padding: 6px 8px;
       border-radius: 2px;
     }
 
@@ -88,12 +110,15 @@
       font-family: "Khmer OS Battambang", Arial, sans-serif;
       font-size: 13px;
       font-weight: bold;
+      margin-bottom: -2px;
     }
 
     .meta-value {
       text-align: left;
       font-size: 13px;
       padding-left: 10px;
+      font-weight: normal;
+      position: relative;
     }
 
     .meta-value strong {
@@ -108,12 +133,12 @@
     }
 
     .section {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .shipment-info td {
       border: none;
-      padding: 3px;
+      padding: 3px 3px;
     }
 
     .right {
@@ -124,53 +149,43 @@
       font-weight: bold;
     }
 
-    /* Totals Section */
-    .totals-wrapper {
-      margin-top: 15px;
-      overflow: hidden;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
     .exchange {
-      width: 45%;
+      margin-top: 6px;
       font-size: 12.5px;
-      padding-top: 5px;
+      clear: left;
+      padding-top: 10px;
     }
 
     .totals {
-      width: 50%;
+      width: 45%;
+      float: right;
+      margin-top: 8px;
+      margin-bottom: 20px;
       border-collapse: collapse;
-      margin-bottom: 15px;
+      clear: none;
     }
 
     .totals td {
       border: none;
-      padding: 5px 10px;
-    }
-
-    .totals td:first-child {
+      padding: 3px 5px;
       text-align: left;
     }
 
-    .totals td:last-child {
+    .totals td.right {
       text-align: right;
-      font-weight: normal;
-      min-width: 120px;
     }
 
     .totals .bold td {
       border-top: 2px solid #000;
-      padding-top: 8px;
-      font-weight: bold;
+      padding-top: 5px;
     }
 
     .footer {
       clear: both;
-      margin-top: 40px;
+      margin-top: 30px;
       display: flex;
       justify-content: space-between;
+      page-break-inside: avoid;
     }
 
     .signature {
@@ -181,12 +196,13 @@
     .signature-line {
       border-top: 1px solid #000;
       width: 80%;
-      margin: 40px auto 10px;
+      margin:80px auto 5px;
     }
 
     .note {
       font-size: 8px;
-      margin-top: 15px;
+      text-align: left;
+      margin-top: 10px;
       clear: both;
     }
 
@@ -209,34 +225,45 @@
       background: #0056b3;
     }
 
-    /* Print Styles */
+    /* Print styles */
     @media print {
-      @page {
-        size: A4;
-        margin: 15mm 10mm;
-      }
-
       body {
         background: white;
-        padding: 0;
         margin: 0;
+        padding: 0;
       }
 
-      .invoice-container {
-        box-shadow: none;
+      .page {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
         padding: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+
+      .page:last-child {
+        page-break-after: auto;
+      }
+
+      .page-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        z-index: 1000;
+      }
+
+      .page-content {
+        margin-top: 130px;
+        padding: 5mm;
       }
 
       .print-button {
         display: none;
       }
 
-      /* Repeat header on every page */
-      .header {
-        display: block;
-      }
-
-      /* Allow tables to break across pages */
       table {
         page-break-inside: auto;
       }
@@ -250,13 +277,14 @@
         display: table-header-group;
       }
 
-      /* Keep totals together */
-      .totals-wrapper {
-        page-break-inside: avoid;
-      }
-
       .footer {
         page-break-inside: avoid;
+      }
+    }
+
+    @media screen {
+      .page-content {
+        min-height: calc(297mm - 140px);
       }
     }
   </style>
@@ -264,143 +292,144 @@
 <body>
   <button class="print-button" onclick="window.print()">🖨️ Print Invoice</button>
 
-  <div class="invoice-container">
-    <!-- Header -->
-    <div class="header">
+  <div class="page">
+    <!-- Header (repeats on every page when printing) -->
+    <div class="page-header">
       <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header">
     </div>
 
-    <!-- Title -->
-    <div class="title">
-      <h2>វិក្កយបត្រពន្ធ<br>TAX INVOICE</h2>
-    </div>
+    <!-- Content -->
+    <div class="page-content">
+      <!-- Title -->
+      <div class="title">
+        <h2>វិក្កយបត្រពន្ធ<br>TAX INVOICE</h2>
+      </div>
 
-    <!-- Invoice Info -->
-    <div class="invoice-info">
-      <!-- Left: Customer Info -->
-      <div class="left">
-        <table class="no-border">
-          <tr><td>ឈ្មោះក្រុមហ៊ុន៖ <span id="customer_name_kh"></span></td></tr>
-          <tr><td>Customer: <span id="customer_name"></span></td></tr>
-          <tr><td>អាសយដ្ឋាន៖ <span id="address_kh"></span></td></tr>
-          <tr><td>Address: <span id="address"></span></td></tr>
-          <tr><td>លេខទូរស័ព្ទ/TEL: <span id="phone"></span></td></tr>
-          <tr><td>លេខអតប (VAT TIN): <span id="vat_tin"></span></td></tr>
+      <!-- Invoice Info -->
+      <div class="invoice-info">
+        <!-- Left: Customer Info -->
+        <div class="left">
+          <table class="no-border">
+            <tr><td>ឈ្មោះក្រុមហ៊ុន៖ <span id="customer_name_kh"></span></td></tr>
+            <tr><td>Customer: <span id="customer_name"></span></td></tr>
+            <tr><td>អាសយដ្ឋាន៖ <span id="address_kh"></span></td></tr>
+            <tr><td>Address: <span id="address"></span></td></tr>
+            <tr><td>លេខទូរស័ព្ទ/TEL: <span id="phone"></span></td></tr>
+            <tr><td>លេខអតប (VAT TIN): <span id="vat_tin"></span></td></tr>
+          </table>
+        </div>
+
+        <!-- Right: Invoice Info -->
+        <div class="right">
+          <table class="no-border invoice-meta" style="float: right;">
+            <tr>
+              <td>
+                <div class="kh-label">លេខវិក្កយបត្រ</div>
+                <div>Invoice No:</div>
+              </td>
+              <td class="meta-value">
+                <strong id="invoice_no"></strong>
+                <div class="dotted-line"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="kh-label">កាលបរិច្ឆេទ</div>
+                <div>Date:</div>
+              </td>
+              <td class="meta-value">
+                <span id="date"></span>
+                <div class="dotted-line"></div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Shipment Info -->
+      <div class="section">
+        <table class="shipment-info">
+          <tr>
+            <td>IMP/EXP: <span id="lot_no"></span></td>
+            <td>Flight Date: <span id="flight_date"></span></td>
+            <td>CNEE: <span id="factory_name"></span></td>
+          </tr>
+          <tr>
+            <td>Declaration: <span id="declaration"></span></td>
+            <td>Vessel: <span id="vessel"></span></td>
+            <td>Port: <span id="port"></span></td>
+          </tr>
+          <tr>
+            <td>Cargo Type: <span id="cargo_type"></span></td>
+            <td>Container: <span id="container"></span></td>
+            <td>HBL: <span id="hbl"></span></td>
+          </tr>
+          <tr>
+            <td>ETD/ETA: <span id="etd"></span></td>
+            <td>QTY: <span id="qty"></span></td>
+            <td>INVPL: <span id="invpl"></span></td>
+          </tr>
         </table>
       </div>
 
-      <!-- Right: Invoice Info -->
-      <div class="right">
-        <table class="no-border invoice-meta" style="float: right;">
+      <!-- Items Table -->
+      <table>
+        <thead>
           <tr>
-            <td>
-              <div class="kh-label">លេខវិក្កយបត្រ</div>
-              <div>Invoice No:</div>
-            </td>
-            <td class="meta-value">
-              <strong id="invoice_no"></strong>
-              <div class="dotted-line"></div>
-            </td>
+            <th style="width: 5%; text-align: center;">ល.រ<br>No</th>
+            <th style="width: 40%;">បរិយាយមុខទំនិញ<br>Description</th>
+            <th style="width: 20%;"></th>
+            <th style="width: 10%; text-align: center;">បរិមាណ<br>Quantity</th>
+            <th style="width: 12%;">តម្លៃឯកតា<br>Unit Price</th>
+            <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
           </tr>
-          <tr>
-            <td>
-              <div class="kh-label">កាលបរិច្ឆេទ</div>
-              <div>Date:</div>
-            </td>
-            <td class="meta-value">
-              <span id="date"></span>
-              <div class="dotted-line"></div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Shipment Info -->
-    <div class="section">
-      <table class="shipment-info">
-        <tr>
-          <td>IMP/EXP: <span id="lot_no"></span></td>
-          <td>Flight Date: <span id="flight_date"></span></td>
-          <td>CNEE: <span id="factory_name"></span></td>
-        </tr>
-        <tr>
-          <td>Declaration: <span id="declaration"></span></td>
-          <td>Vessel: <span id="vessel"></span></td>
-          <td>Port: <span id="port"></span></td>
-        </tr>
-        <tr>
-          <td>Cargo Type: <span id="cargo_type"></span></td>
-          <td>Container: <span id="container"></span></td>
-          <td>HBL: <span id="hbl"></span></td>
-        </tr>
-        <tr>
-          <td>ETD/ETA: <span id="etd"></span></td>
-          <td>QTY: <span id="qty"></span></td>
-          <td>INVPL: <span id="invpl"></span></td>
-        </tr>
+        </thead>
+        <tbody id="items_tbody">
+          <!-- Items will be inserted here -->
+        </tbody>
       </table>
-    </div>
 
-    <!-- Items Table -->
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 5%; text-align: center;">ល.រ<br>No</th>
-          <th style="width: 40%;">បរិយាយមុខទំនិញ<br>Description</th>
-          <th style="width: 20%;"></th>
-          <th style="width: 10%; text-align: center;">បរិមាណ<br>Quantity</th>
-          <th style="width: 12%;">តម្លៃឯកតា<br>Unit Price</th>
-          <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
-        </tr>
-      </thead>
-      <tbody id="items_tbody">
-        <!-- Items will be inserted here -->
-      </tbody>
-    </table>
-
-    <!-- Totals Section -->
-    <div class="totals-wrapper">
-      <div class="exchange">
-        អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
-      </div>
-      
+      <!-- Totals -->
       <table class="totals">
         <tr>
           <td>សរុប / Subtotal:</td>
-          <td id="subtotal">$0.00</td>
+          <td class="right" id="subtotal"></td>
         </tr>
         <tr>
           <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
-          <td id="vat_amount">$0.00</td>
+          <td class="right" id="vat_amount"></td>
         </tr>
         <tr class="bold">
           <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
-          <td id="grand_total">$0.00</td>
+          <td class="right" id="grand_total"></td>
         </tr>
         <tr>
           <td>សរុបរួមជារៀល / Grand Total KHR:</td>
-          <td id="grand_total_khr">៛0.00</td>
+          <td class="right" id="grand_total_khr"></td>
         </tr>
       </table>
-    </div>
 
-    <!-- Signatures -->
-    <div class="footer">
-      <div class="signature">
-        <div class="signature-line"></div>
-        <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
+      <div class="exchange">
+        អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate"></span>
       </div>
-      
-      <div class="signature">
-        <div class="signature-line"></div>
-        <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
-      </div>
-    </div>
 
-    <div class="note">
-      សម្គាល់៖ ច្បាប់ដើមសម្រាប់អ្នកទិញ ច្បាប់ចម្លងសម្រាប់អ្នកលក់<br>
-      Note: Original Invoice for Customer, Copied Invoice for Seller.
+      <!-- Signatures -->
+      <div class="footer">
+        <div class="signature">
+          <div class="signature-line"></div>
+          <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
+        </div>
+        
+        <div class="signature">
+          <div class="signature-line"></div>
+          <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
+        </div>
+      </div>
+
+      <div class="note">
+        សម្គាល់៖ ច្បាប់ដើមសម្រាប់អ្នកទិញ ច្បាប់ចម្លងសម្រាប់អ្នកលក់<br>
+        Note: Original Invoice for Customer, Copied Invoice for Seller.
+      </div>
     </div>
   </div>
 
@@ -435,10 +464,11 @@
         }
       });
 
-      // Handle line items
+      // Handle line items (support multiple items)
       const tbody = document.getElementById('items_tbody');
       tbody.innerHTML = '';
       
+      // Check if items are passed as JSON or individual parameters
       if (data.items) {
         try {
           const items = JSON.parse(data.items);
@@ -448,7 +478,8 @@
         } catch (e) {
           console.error('Error parsing items:', e);
         }
-      } else if (data.item_name || data.no) {
+      } else {
+        // Single item from individual parameters
         const item = {
           no: data.no || '1',
           item_name: data.item_name || '',
@@ -476,6 +507,7 @@
       `;
     }
 
+    // Load data when page loads
     window.onload = populateInvoice;
   </script>
 </body>
