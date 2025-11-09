@@ -439,20 +439,22 @@
         }
       });
 
-      // Handle header image - using static URL
-      const headerImg = document.getElementById('header_image');
-      const headerPlaceholder = document.getElementById('header_placeholder');
-      
-      headerImg.src = '';
-      headerImg.style.display = 'block';
-      headerPlaceholder.style.display = 'none';
-      
-      // Handle image load error
-      headerImg.onerror = function() {
-        headerImg.style.display = 'none';
-        headerPlaceholder.style.display = 'block';
-        headerPlaceholder.innerHTML = '<p>⚠️ Unable to load header image</p>';
-      };
+// Handle header image
+      if (data.header_image) {
+        const headerImg = document.getElementById('header_image');
+        const headerPlaceholder = document.getElementById('header_placeholder');
+        
+        headerImg.src = data.header_image;
+        headerImg.style.display = 'block';
+        headerPlaceholder.style.display = 'none';
+        
+        // Handle image load error
+        headerImg.onerror = function() {
+          headerImg.style.display = 'none';
+          headerPlaceholder.style.display = 'block';
+          headerPlaceholder.innerHTML = '<p>⚠️ Unable to load header image</p>';
+        };
+      }
 
       // Handle line items (support multiple items)
       const tbody = document.getElementById('items_tbody');
