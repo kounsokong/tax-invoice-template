@@ -152,7 +152,8 @@
     .exchange {
       margin-top: 6px;
       font-size: 12.5px;
-      clear: both;
+      clear: left;
+      padding-top: 10px;
     }
 
     .totals {
@@ -161,15 +162,22 @@
       margin-top: 8px;
       margin-bottom: 20px;
       border-collapse: collapse;
+      clear: none;
     }
 
     .totals td {
       border: none;
-      padding: 3px 0;
+      padding: 3px 5px;
+      text-align: left;
+    }
+
+    .totals td.right {
+      text-align: right;
     }
 
     .totals .bold td {
       border-top: 2px solid #000;
+      padding-top: 5px;
     }
 
     .footer {
