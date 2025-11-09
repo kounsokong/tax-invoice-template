@@ -128,11 +128,19 @@
     .totals-wrapper {
       margin-top: 15px;
       overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .exchange {
+      width: 45%;
+      font-size: 12.5px;
+      padding-top: 5px;
     }
 
     .totals {
       width: 50%;
-      float: right;
       border-collapse: collapse;
       margin-bottom: 15px;
     }
@@ -156,12 +164,6 @@
       border-top: 2px solid #000;
       padding-top: 8px;
       font-weight: bold;
-    }
-
-    .exchange {
-      clear: both;
-      margin: 15px 0;
-      font-size: 12.5px;
     }
 
     .footer {
@@ -359,6 +361,10 @@
 
     <!-- Totals Section -->
     <div class="totals-wrapper">
+      <div class="exchange">
+        អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
+      </div>
+      
       <table class="totals">
         <tr>
           <td>សរុប / Subtotal:</td>
@@ -377,10 +383,6 @@
           <td id="grand_total_khr">៛0.00</td>
         </tr>
       </table>
-    </div>
-
-    <div class="exchange">
-      អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
     </div>
 
     <!-- Signatures -->
