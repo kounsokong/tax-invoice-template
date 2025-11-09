@@ -42,15 +42,6 @@
       display: block;
     }
 
-    .header-placeholder {
-      padding: 20px;
-      background: #f8f9fa;
-      border: 2px dashed #ccc;
-      border-radius: 4px;
-      text-align: center;
-      color: #666;
-    }
-
     .title {
       text-align: center;
       margin: 6px 0;
@@ -96,73 +87,35 @@
       width: 35%;
     }
 
-    .invoice-meta {
-      width: 100%;
-    }
-
     .invoice-meta td {
-      padding: 2px 0;
-      border: none;
-      vertical-align: middle;
-    }
-
-    .invoice-meta .label-col {
-      text-align: right;
-      padding-right: 12px;
-      width: auto;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    .invoice-meta .value-col {
-      text-align: left;
-      width: 100%;
-      position: relative;
-      vertical-align: middle;
+      vertical-align: top;
+      padding: 2px 6px;
     }
 
     .kh-label {
       font-family: "Khmer OS Battambang", Arial, sans-serif;
       font-size: 13px;
-      font-weight: normal;
-      display: block;
-      text-align: right;
-      line-height: 1.3;
-    }
-
-    .en-label {
-      font-size: 13px;
-      display: block;
-      text-align: right;
-      line-height: 1.3;
-    }
-
-    .value-wrapper {
-      display: inline-block;
-      text-align: right;
-      min-width: 280px;
-      margin-left: 8px;
-      position: relative;
+      font-weight: bold;
+      margin-bottom: -2px;
     }
 
     .meta-value {
+      text-align: left;
       font-size: 13px;
+      padding-left: 10px;
       font-weight: normal;
-      display: block;
-      text-align: right;
-      padding: 2px 8px;
-      line-height: 1.4;
+      position: relative;
     }
 
-    .meta-value.bold-value {
+    .meta-value strong {
       font-weight: bold;
-      font-size: 14px;
+      font-size: 13.5px;
     }
 
-    .dashed-underline {
-      border-bottom: 2px dashed #000;
+    .dotted-line {
+      border-bottom: 2px dotted #000;
       width: 100%;
-      margin-top: 0;
+      margin-top: 2px;
     }
 
     .section {
@@ -273,7 +226,7 @@
   <div class="invoice-container">
     <!-- Header -->
     <div class="header">
-      <img id="header_image" src="" alt="Company Header" style="display: none;">
+      <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header">
     </div>
 
     <!-- Title -->
@@ -354,7 +307,7 @@
         <tr>
           <th style="width: 5%; text-align: center;">ល.រ<br>No</th>
           <th style="width: 40%;">បរិយាយមុខទំនិញ<br>Description</th>
-          <th style="width: 20%;">កំណត់សំគាល់<br>Remarks</th>
+          <th style="width: 20%;"></th>
           <th style="width: 10%; text-align: center;">បរិមាណ<br>Quantity</th>
           <th style="width: 12%;">តម្លៃឯកតា<br>Unit Price</th>
           <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
@@ -439,23 +392,6 @@
         }
       });
 
-      // Handle header image
-      if (data.header_image) {
-        const headerImg = document.getElementById('header_image');
-        const headerPlaceholder = document.getElementById('header_placeholder');
-        
-        headerImg.src = data.header_image;
-        headerImg.style.display = 'block';
-        headerPlaceholder.style.display = 'none';
-        
-        // Handle image load error
-        headerImg.onerror = function() {
-          headerImg.style.display = 'none';
-          headerPlaceholder.style.display = 'block';
-          headerPlaceholder.innerHTML = '<p>⚠️ Unable to load header image</p>';
-        };
-      }
-
       // Handle line items (support multiple items)
       const tbody = document.getElementById('items_tbody');
       tbody.innerHTML = '';
@@ -467,7 +403,7 @@
           items.forEach((item, index) => {
             addItemRow(index + 1, item);
           });
-        } catch (e) {a
+        } catch (e) {
           console.error('Error parsing items:', e);
         }
       } else {
@@ -490,13 +426,13 @@
       const row = tbody.insertRow();
       
       row.innerHTML = `
-      <td style="text-align: center;">${no}</td>
-      <td>${item.item_name || ''} ${item.item_name_kh || ''}</td>
-      <td>${item.remarks || ''}</td>
-      <td style="text-align: center;">${item.qty || ''}</td>
-      <td class="right">${item.rate || ''}</td>
-      <td class="right">${item.amount || ''}</td>
-    `;
+        <td style="text-align: center;">${no}</td>
+        <td>${item.item_name} ${item.item_name_kh || ''}</td>
+        <td>${item.remarks || ''}</td>
+        <td style="text-align: center;">${item.qty || ''}</td>
+        <td class="right">${item.rate || ''}</td>
+        <td class="right">${item.amount || ''}</td>
+      `;
     }
 
     // Load data when page loads
