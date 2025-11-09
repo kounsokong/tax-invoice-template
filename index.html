@@ -149,35 +149,45 @@
       font-weight: bold;
     }
 
-    .exchange {
-      margin-top: 6px;
-      font-size: 12.5px;
-      clear: left;
-      padding-top: 10px;
+    /* Totals and footer section */
+    .bottom-section {
+      margin-top: 15px;
+      page-break-inside: avoid;
+    }
+
+    .totals-container {
+      width: 100%;
+      margin-bottom: 10px;
     }
 
     .totals {
-      width: 45%;
+      width: 50%;
       float: right;
-      margin-top: 8px;
-      margin-bottom: 20px;
       border-collapse: collapse;
-      clear: none;
     }
 
     .totals td {
       border: none;
-      padding: 3px 5px;
+      padding: 4px 8px;
       text-align: left;
     }
 
     .totals td.right {
       text-align: right;
+      min-width: 120px;
     }
 
     .totals .bold td {
       border-top: 2px solid #000;
-      padding-top: 5px;
+      padding-top: 8px;
+      font-weight: bold;
+    }
+
+    .exchange {
+      margin-top: 10px;
+      font-size: 12.5px;
+      clear: both;
+      padding-top: 10px;
     }
 
     .footer {
@@ -196,7 +206,7 @@
     .signature-line {
       border-top: 1px solid #000;
       width: 80%;
-      margin: 70px auto 5px;
+      margin: 35px auto 5px;
     }
 
     .note {
@@ -235,37 +245,22 @@
 
       .page {
         width: 210mm;
-        height: 297mm;
+        min-height: 297mm;
         margin: 0;
         padding: 0;
         box-shadow: none;
-        page-break-after: always;
-      }
-
-      .page:last-child {
         page-break-after: auto;
       }
 
       .page-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 120px;
-        z-index: 1000;
-        background: white;
+        display: block;
+        page-break-after: avoid;
+        page-break-inside: avoid;
       }
 
       .page-content {
-        margin-top: 160px !important;
         padding: 5mm;
-        padding-top: 15px;
-      }
-
-      /* First page - no extra top margin needed */
-      .page:first-child .page-content {
-        margin-top: 0 !important;
-        padding-top: 5mm;
+        page-break-before: avoid;
       }
 
       .print-button {
@@ -285,16 +280,27 @@
         display: table-header-group;
       }
 
+      /* Ensure bottom section stays together and visible */
+      .bottom-section {
+        page-break-inside: avoid;
+        margin-top: 20px;
+      }
+
+      .totals-container {
+        page-break-inside: avoid;
+      }
+
       .footer {
         page-break-inside: avoid;
+        page-break-before: avoid;
       }
 
-      .totals {
-        page-break-inside: avoid;
-      }
-
-      .exchange {
-        page-break-inside: avoid;
+      /* Add space before bottom section if it goes to new page */
+      .bottom-section::before {
+        content: "";
+        display: block;
+        height: 150px;
+        page-break-after: always;
       }
     }
 
@@ -405,46 +411,51 @@
         </tbody>
       </table>
 
-      <!-- Totals -->
-      <table class="totals">
-        <tr>
-          <td>សរុប / Subtotal:</td>
-          <td class="right" id="subtotal"></td>
-        </tr>
-        <tr>
-          <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
-          <td class="right" id="vat_amount"></td>
-        </tr>
-        <tr class="bold">
-          <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
-          <td class="right" id="grand_total"></td>
-        </tr>
-        <tr>
-          <td>សរុបរួមជារៀល / Grand Total KHR:</td>
-          <td class="right" id="grand_total_khr"></td>
-        </tr>
-      </table>
-
-      <div class="exchange">
-        អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate"></span>
-      </div>
-
-      <!-- Signatures -->
-      <div class="footer">
-        <div class="signature">
-          <div class="signature-line"></div>
-          <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
+      <!-- Bottom section: Totals, Exchange, Signatures -->
+      <div class="bottom-section">
+        <!-- Totals -->
+        <div class="totals-container">
+          <table class="totals">
+            <tr>
+              <td>សរុប / Subtotal:</td>
+              <td class="right" id="subtotal"></td>
+            </tr>
+            <tr>
+              <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
+              <td class="right" id="vat_amount"></td>
+            </tr>
+            <tr class="bold">
+              <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
+              <td class="right" id="grand_total"></td>
+            </tr>
+            <tr>
+              <td>សរុបរួមជារៀល / Grand Total KHR:</td>
+              <td class="right" id="grand_total_khr"></td>
+            </tr>
+          </table>
         </div>
-        
-        <div class="signature">
-          <div class="signature-line"></div>
-          <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
-        </div>
-      </div>
 
-      <div class="note">
-        សម្គាល់៖ ច្បាប់ដើមសម្រាប់អ្នកទិញ ច្បាប់ចម្លងសម្រាប់អ្នកលក់<br>
-        Note: Original Invoice for Customer, Copied Invoice for Seller.
+        <div class="exchange">
+          អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate"></span>
+        </div>
+
+        <!-- Signatures -->
+        <div class="footer">
+          <div class="signature">
+            <div class="signature-line"></div>
+            <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
+          </div>
+          
+          <div class="signature">
+            <div class="signature-line"></div>
+            <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
+          </div>
+        </div>
+
+        <div class="note">
+          សម្គាល់៖ ច្បាប់ដើមសម្រាប់អ្នកទិញ ច្បាប់ចម្លងសម្រាប់អ្នកលក់<br>
+          Note: Original Invoice for Customer, Copied Invoice for Seller.
+        </div>
       </div>
     </div>
   </div>
