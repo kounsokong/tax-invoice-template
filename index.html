@@ -196,7 +196,7 @@
     .signature-line {
       border-top: 1px solid #000;
       width: 80%;
-      margin:80px auto 5px;
+      margin:70px auto 5px;
     }
 
     .note {
@@ -253,11 +253,19 @@
         right: 0;
         height: 120px;
         z-index: 1000;
+        background: white;
       }
 
       .page-content {
-        margin-top: 130px;
+        margin-top: 140px !important;
         padding: 5mm;
+        padding-top: 10px;
+      }
+
+      /* First page - no extra top margin needed */
+      .page:first-child .page-content {
+        margin-top: 0 !important;
+        padding-top: 5mm;
       }
 
       .print-button {
@@ -278,6 +286,14 @@
       }
 
       .footer {
+        page-break-inside: avoid;
+      }
+
+      .totals {
+        page-break-inside: avoid;
+      }
+
+      .exchange {
         page-break-inside: avoid;
       }
     }
