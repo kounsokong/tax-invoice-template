@@ -7,7 +7,10 @@
   <style>
     @page {
       size: A4;
-      margin: 15mm 5mm 5mm 5mm;
+      margin-top: 130mm;
+      margin-bottom: 15mm;
+      margin-left: 5mm;
+      margin-right: 5mm;
     }
 
     body {
@@ -228,10 +231,12 @@
         left: 0;
         right: 0;
         z-index: 1000;
+        background: white;
+        padding: 10px;
       }
 
-      .invoice-container {
-        padding-top: 120px;
+      body {
+        margin-top: 130px;
       }
 
       table {
@@ -245,6 +250,11 @@
 
       thead {
         display: table-header-group;
+      }
+
+      /* Ensure content doesn't overlap with fixed header */
+      .title, .invoice-info, .section, table {
+        margin-top: 10px;
       }
     }
   </style>
