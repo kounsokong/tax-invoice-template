@@ -357,7 +357,7 @@
           <th style="width: 20%;">កំណត់សំគាល់<br>Remarks</th>
           <th style="width: 10%; text-align: center;">បរិមាណ<br>Quantity</th>
           <th style="width: 12%;">តម្លៃឯកតា<br>Unit Price</th>
-          <th style="width: 13%;">តម្លៃសរុប<br>Amount(USD)</th>
+          <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
         </tr>
       </thead>
       <tbody id="items_tbody">
@@ -460,9 +460,6 @@
       const tbody = document.getElementById('items_tbody');
       tbody.innerHTML = '';
       
-      // ... rest of line items code
-    }
-      
       // Check if items are passed as JSON or individual parameters
       if (data.items) {
         try {
@@ -470,7 +467,7 @@
           items.forEach((item, index) => {
             addItemRow(index + 1, item);
           });
-        } catch (e) {
+        } catch (e) {a
           console.error('Error parsing items:', e);
         }
       } else {
