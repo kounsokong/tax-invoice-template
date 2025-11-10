@@ -222,43 +222,51 @@
         background: white;
         padding: 0;
         margin: 0;
+        margin-top: 130px; /* Adjust for header height */
       }
 
       .invoice-container {
         box-shadow: none;
         padding: 0;
+        overflow: visible !important;
       }
 
       .print-button {
         display: none;
       }
 
-      /* Repeat header on every page */
-      .header {
-        display: block;
-      }
-
-      /* Allow tables to break across pages */
-      table {
-        page-break-inside: auto;
-      }
-
-      tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
+      /* Allow content to break across pages */
+      table, tr, td {
+        page-break-inside: auto !important;
       }
 
       thead {
         display: table-header-group;
       }
 
-      /* Keep totals together */
-      .totals-wrapper {
+      tfoot {
+        display: table-footer-group;
+      }
+
+      /* Keep totals and footer together */
+      .totals-wrapper, .footer {
         page-break-inside: avoid;
       }
 
-      .footer {
-        page-break-inside: avoid;
+      /* Repeat letterhead on every page */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        z-index: 100;
+      }
+
+      .header img {
+        width: 100%;
+        max-height: 110px;
+        object-fit: contain;
       }
     }
   </style>
@@ -420,8 +428,6 @@
     // Populate invoice data
     function populateInvoice() {
       const data = getUrlParams();
-      
-      // Simple fields
       const fields = [
         'customer_name_kh', 'customer_name', 'address_kh', 'address',
         'phone', 'vat_tin', 'invoice_no', 'date', 'lot_no', 'flight_date',
@@ -432,50 +438,29 @@
       
       fields.forEach(field => {
         const element = document.getElementById(field);
-        if (element && data[field]) {
-          element.textContent = data[field];
-        }
+        if (element && data[field]) element.textContent = data[field];
       });
 
       // Handle line items
       const tbody = document.getElementById('items_tbody');
       tbody.innerHTML = '';
-      
       if (data.items) {
         try {
           const items = JSON.parse(data.items);
-          items.forEach((item, index) => {
-            addItemRow(index + 1, item);
-          });
+          tbody.innerHTML = items.map((item, i) => `
+            <tr>
+              <td style="text-align:center;">${i + 1}</td>
+              <td>${item.item_name} ${item.item_name_kh || ''}</td>
+              <td>${item.remarks || ''}</td>
+              <td style="text-align:center;">${item.qty || ''}</td>
+              <td class="right">${item.rate || ''}</td>
+              <td class="right">${item.amount || ''}</td>
+            </tr>
+          `).join('');
         } catch (e) {
           console.error('Error parsing items:', e);
         }
-      } else if (data.item_name || data.no) {
-        const item = {
-          no: data.no || '1',
-          item_name: data.item_name || '',
-          item_name_kh: data.item_name_kh || '',
-          remarks: data.remarks || '',
-          qty: data.item_qty || '',
-          rate: data.rate || '',
-          amount: data.amount || ''
-        };
-        addItemRow(item.no, item);
       }
-    }
-
-    function addItemRow(no, item) {
-      const tbody = document.getElementById('items_tbody');
-      const row = tbody.insertRow();
-      
-      row.innerHTML = `
-        <td style="text-align: center;">${no}</td>
-        <td>${item.item_name} ${item.item_name_kh || ''}</td>
-        <td>${item.remarks || ''}</td>
-        <td style="text-align: center;">${item.qty || ''}</td>
-        <td class="right">${item.rate || ''}</td>
-        <td class="right">${item.amount || ''}</td>
-      `;
     }
 
     window.onload = populateInvoice;
