@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tax Invoice - Angkobodia Logistics Co., Ltd</title>
   <style>
-    /* ========= GENERAL ========= */
-    @page {
-      size: A4;
-      margin: 15mm 10mm;
-    }
-
     body {
       font-family: "Khmer OS Battambang", Arial, sans-serif;
       margin: 0;
@@ -21,40 +15,64 @@
       background: #f5f5f5;
     }
 
-    /* ========= FIXED HEADER ========= */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 110px; /* height of header area */
-      text-align: center;
-      z-index: 1000;
-      background: white;
-      border-bottom: 1px solid transparent; /* prevents text from sticking to edge */
-    }
-
-    .header img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* ========= SAFE CONTENT AREA ========= */
     .invoice-container {
       width: 210mm;
       margin: 0 auto;
       background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 10mm;
-      padding-top: 160px; /* ensure all content starts BELOW header */
-      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    /* ========= LAYOUT ELEMENTS ========= */
-    .title { text-align: center; margin: 10px 0; }
-    .title h2 { font-size: 17px; margin: 0; font-weight: bold; }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 100;
+      background: white;
+    }
+
+    .header img {
+      width: 100%;
+      max-height: 110px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* push content below fixed header */
+    .content {
+      margin-top: 160px; /* same as header height */
+    }
+
+    .title {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .title h2 {
+      font-size: 17px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 4px 5px;
+      vertical-align: top;
+    }
+
+    .no-border td {
+      border: none;
+      padding: 2px 0;
+    }
 
     .invoice-info {
       display: flex;
@@ -73,23 +91,26 @@
       width: 35%;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-      margin-bottom: 10px;
-      page-break-inside: auto;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 4px 5px;
+    .invoice-meta td {
       vertical-align: top;
+      padding: 2px 6px;
     }
 
-    .no-border td {
-      border: none;
-      padding: 2px 0;
+    .kh-label {
+      font-family: "Khmer OS Battambang", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .meta-value {
+      text-align: left;
+      font-size: 13px;
+      padding-left: 10px;
+    }
+
+    .meta-value strong {
+      font-weight: bold;
+      font-size: 13.5px;
     }
 
     .dotted-line {
@@ -98,18 +119,37 @@
       margin-top: 2px;
     }
 
-    .right { text-align: right; }
-    .bold { font-weight: bold; }
+    .section {
+      margin-bottom: 8px;
+    }
 
-    /* ========= TOTALS & FOOTER ========= */
+    .shipment-info td {
+      border: none;
+      padding: 3px;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    /* Totals Section */
     .totals-wrapper {
       margin-top: 15px;
+      overflow: hidden;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
-    .exchange { width: 45%; font-size: 12.5px; padding-top: 5px; }
+    .exchange {
+      width: 45%;
+      font-size: 12.5px;
+      padding-top: 5px;
+    }
 
     .totals {
       width: 50%;
@@ -122,8 +162,15 @@
       padding: 5px 10px;
     }
 
-    .totals td:first-child { text-align: left; }
-    .totals td:last-child { text-align: right; min-width: 120px; }
+    .totals td:first-child {
+      text-align: left;
+    }
+
+    .totals td:last-child {
+      text-align: right;
+      min-width: 120px;
+    }
+
     .totals .bold td {
       border-top: 2px solid #000;
       padding-top: 8px;
@@ -135,7 +182,6 @@
       margin-top: 40px;
       display: flex;
       justify-content: space-between;
-      page-break-inside: avoid;
     }
 
     .signature {
@@ -153,10 +199,8 @@
       font-size: 8px;
       margin-top: 15px;
       clear: both;
-      page-break-inside: avoid;
     }
 
-    /* ========= PRINT BUTTON ========= */
     .print-button {
       position: fixed;
       top: 20px;
@@ -169,40 +213,70 @@
       cursor: pointer;
       font-size: 16px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 2000;
+      z-index: 1000;
     }
 
-    .print-button:hover { background: #0056b3; }
+    .print-button:hover {
+      background: #0056b3;
+    }
 
-    /* ========= PRINT STYLES ========= */
+    /* Print Styles */
     @media print {
+      @page {
+        size: A4;
+        margin: 15mm 10mm;
+      }
+
       body {
         background: white;
+        margin: 0;
       }
 
       .invoice-container {
         box-shadow: none;
-        margin: 0;
-        width: auto;
-        padding: 0 10mm;
-        padding-top: 140px !important; /* keep safe area */
+        padding: 0;
+        overflow: visible !important;
       }
 
-      .print-button { display: none; }
+      .print-button {
+        display: none;
+      }
 
+      /* Repeat header on each printed page */
       .header {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 110px;
         background: white;
-        z-index: 1000;
       }
 
-      thead { display: table-header-group; }
-      tfoot { display: table-footer-group; }
-      tr, td { page-break-inside: avoid; }
+      .header img {
+        width: 100%;
+        max-height: 110px;
+      }
+
+      /* Ensure content starts below header */
+      .content {
+        margin-top: 120px !important;
+      }
+
+      table, tr, td {
+        page-break-inside: auto !important;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tfoot {
+        display: table-footer-group;
+      }
+
+      /* Keep totals and footer together */
+      .totals-wrapper, .footer {
+        page-break-inside: avoid;
+      }
     }
   </style>
 </head>
@@ -214,8 +288,8 @@
     <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header" />
   </div>
 
-  <!-- Invoice Content -->
-  <div class="invoice-container">
+  <!-- Content Starts Below Header -->
+  <div class="invoice-container content">
 
     <div class="title">
       <h2>វិក្កយបត្រពន្ធ<br>TAX INVOICE</h2>
@@ -260,7 +334,7 @@
     </div>
 
     <div class="section">
-      <table class="shipment-info no-border">
+      <table class="shipment-info">
         <tr>
           <td>IMP/EXP: <span id="lot_no"></span></td>
           <td>Flight Date: <span id="flight_date"></span></td>
