@@ -211,20 +211,11 @@
       background: #0056b3;
     }
 
-    /* Page break styling */
-    .page-break {
-      display: none;
-    }
-
-    .cloned-header {
-      display: none;
-    }
-
     /* Print Styles */
     @media print {
       @page {
         size: A4;
-        margin: 15mm 10mm;
+        margin: 10mm;
       }
 
       body {
@@ -241,26 +232,31 @@
       }
 
       .header {
-        display: table-header-group;
-        page-break-after: avoid;
+        position: fixed;
+        top: -10mm;
+        left: 0;
+        right: 0;
+        height: 30mm;
+        background: white;
+        margin: 0;
+        padding: 5mm 10mm;
+      }
+
+      .header img {
+        max-height: 25mm;
+      }
+
+      .title {
+        margin-top: 32mm;
       }
 
       .print-button {
         display: none;
       }
 
-      /* Show page breaks and cloned headers */
-      .page-break {
-        display: block;
-      }
-
-      .cloned-header {
-        display: block;
-      }
-
-      /* Allow tables to break across pages */
       table {
         page-break-inside: auto;
+        width: 100%;
       }
 
       tr {
@@ -276,13 +272,21 @@
         display: table-row-group;
       }
 
-      /* Keep totals together */
       .totals-wrapper {
         page-break-inside: avoid;
       }
 
       .footer {
         page-break-inside: avoid;
+      }
+
+      /* Ensure content doesn't hide under header on every page */
+      * {
+        margin-top: 0 !important;
+      }
+
+      .invoice-container > *:first-child {
+        margin-top: 32mm !important;
       }
     }
   </style>
@@ -369,7 +373,7 @@
     </div>
 
     <!-- Items Table -->
-    <table>
+    <table id="items-table">
       <thead>
         <tr>
           <th style="width: 5%; text-align: center;">ល.រ<br>No</th>
@@ -501,78 +505,6 @@
         <td class="right">${item.amount || ''}</td>
       `;
     }
-
-    // Function to create page breaks with headers
-    function createPrintPages() {
-      const container = document.querySelector('.invoice-container');
-      const header = document.querySelector('.header');
-      const headerHeight = 140; // Height of header in pixels (approx 37mm)
-      const pageHeight = 1120; // A4 page height in pixels at 96dpi (297mm)
-      const usableHeight = pageHeight - headerHeight - 60; // Space for header and margins
-      
-      // Get all direct children
-      const children = Array.from(container.children);
-      let currentHeight = 0;
-      let pageNumber = 1;
-      
-      children.forEach((child, index) => {
-        // Skip the header itself
-        if (child.classList.contains('header')) {
-          return;
-        }
-        
-        const childHeight = child.offsetHeight;
-        
-        // Check if we need a new page
-        if (currentHeight + childHeight > usableHeight && pageNumber === 1) {
-          // Insert page break and duplicate header
-          const pageBreak = document.createElement('div');
-          pageBreak.className = 'page-break';
-          pageBreak.style.pageBreakBefore = 'always';
-          pageBreak.style.paddingTop = '20px';
-          
-          // Clone header
-          const headerClone = header.cloneNode(true);
-          headerClone.classList.add('cloned-header');
-          pageBreak.appendChild(headerClone);
-          
-          container.insertBefore(pageBreak, child);
-          currentHeight = headerHeight;
-          pageNumber++;
-        } else if (currentHeight + childHeight > usableHeight) {
-          // Subsequent pages
-          const pageBreak = document.createElement('div');
-          pageBreak.className = 'page-break';
-          pageBreak.style.pageBreakBefore = 'always';
-          pageBreak.style.paddingTop = '20px';
-          
-          const headerClone = header.cloneNode(true);
-          headerClone.classList.add('cloned-header');
-          pageBreak.appendChild(headerClone);
-          
-          container.insertBefore(pageBreak, child);
-          currentHeight = headerHeight;
-          pageNumber++;
-        }
-        
-        currentHeight += childHeight;
-      });
-    }
-
-    // Function to remove page breaks (for screen view)
-    function removePrintPages() {
-      const pageBreaks = document.querySelectorAll('.page-break');
-      pageBreaks.forEach(pb => pb.remove());
-    }
-
-    // Add print event listeners
-    window.addEventListener('beforeprint', () => {
-      createPrintPages();
-    });
-
-    window.addEventListener('afterprint', () => {
-      removePrintPages();
-    });
 
     window.onload = populateInvoice;
   </script>
