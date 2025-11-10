@@ -5,90 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tax Invoice - Angkobodia Logistics Co., Ltd</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
       font-family: "Khmer OS Battambang", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
       color: #000;
       font-size: 13px;
       line-height: 1.4;
       background: #f5f5f5;
     }
 
-    .container {
-      max-width: 210mm;
+    .invoice-container {
+      width: 210mm;
       margin: 20px auto;
       background: white;
-      padding: 15mm;
+      padding: 10mm;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .header-img {
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .header img {
       width: 100%;
       max-height: 110px;
       object-fit: contain;
-      margin-bottom: 10px;
+      display: block;
     }
 
     .title {
       text-align: center;
-      margin: 10px 0 15px 0;
+      margin: 10px 0;
     }
 
     .title h2 {
       font-size: 17px;
-      font-weight: bold;
       margin: 0;
+      font-weight: bold;
     }
 
-    .invoice-header {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      margin-bottom: 10px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 4px 5px;
+      vertical-align: top;
+    }
+
+    .no-border td {
+      border: none;
+      padding: 2px 0;
+    }
+
+    .invoice-info {
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
     }
 
-    .customer-box {
+    .invoice-info .left {
       width: 60%;
       border: 1px solid #000;
       padding: 8px;
+      border-radius: 2px;
     }
 
-    .customer-box table {
-      width: 100%;
-      border: none;
-    }
-
-    .customer-box td {
-      border: none;
-      padding: 2px 0;
-    }
-
-    .invoice-meta {
+    .invoice-info .right {
       width: 35%;
     }
 
-    .invoice-meta table {
-      width: 100%;
-      float: right;
-      border: none;
-    }
-
     .invoice-meta td {
-      border: none;
-      padding: 2px 6px;
       vertical-align: top;
+      padding: 2px 6px;
     }
 
     .kh-label {
-      font-weight: bold;
+      font-family: "Khmer OS Battambang", Arial, sans-serif;
       font-size: 13px;
+      font-weight: bold;
     }
 
     .meta-value {
+      text-align: left;
+      font-size: 13px;
       padding-left: 10px;
     }
 
@@ -99,16 +105,12 @@
 
     .dotted-line {
       border-bottom: 2px dotted #000;
+      width: 100%;
       margin-top: 2px;
     }
 
-    .shipment-info {
-      margin: 10px 0;
-    }
-
-    .shipment-info table {
-      width: 100%;
-      border: none;
+    .section {
+      margin-bottom: 8px;
     }
 
     .shipment-info td {
@@ -116,71 +118,64 @@
       padding: 3px;
     }
 
-    .items-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 10px 0;
-    }
-
-    .items-table th,
-    .items-table td {
-      border: 1px solid #000;
-      padding: 5px;
-      vertical-align: top;
-    }
-
-    .items-table th {
-      background: white;
-      font-weight: bold;
-      text-align: left;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .text-right {
+    .right {
       text-align: right;
     }
 
-    .totals-section {
-      margin-top: 15px;
-      display: flex;
-      justify-content: space-between;
+    .bold {
+      font-weight: bold;
     }
 
-    .exchange-rate {
+    /* Totals Section */
+    .totals-wrapper {
+      margin-top: 15px;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .exchange {
       width: 45%;
+      font-size: 12.5px;
       padding-top: 5px;
     }
 
-    .totals-table {
+    .totals {
       width: 50%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
     }
 
-    .totals-table table {
-      width: 100%;
-      border: none;
-    }
-
-    .totals-table td {
+    .totals td {
       border: none;
       padding: 5px 10px;
     }
 
-    .totals-table .total-row td {
+    .totals td:first-child {
+      text-align: left;
+    }
+
+    .totals td:last-child {
+      text-align: right;
+      font-weight: normal;
+      min-width: 120px;
+    }
+
+    .totals .bold td {
       border-top: 2px solid #000;
       padding-top: 8px;
       font-weight: bold;
     }
 
-    .signatures {
+    .footer {
+      clear: both;
       margin-top: 40px;
       display: flex;
       justify-content: space-between;
     }
 
-    .signature-box {
+    .signature {
       width: 45%;
       text-align: center;
     }
@@ -194,9 +189,10 @@
     .note {
       font-size: 8px;
       margin-top: 15px;
+      clear: both;
     }
 
-    .print-btn {
+    .print-button {
       position: fixed;
       top: 20px;
       right: 20px;
@@ -208,95 +204,84 @@
       cursor: pointer;
       font-size: 16px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 9999;
+      z-index: 1000;
     }
 
-    .print-btn:hover {
+    .print-button:hover {
       background: #0056b3;
     }
 
-    /* PRINT STYLES - THE RELIABLE WAY */
+    /* Print Styles */
     @media print {
       @page {
         size: A4;
-        margin: 20mm 15mm;
+        margin: 15mm 10mm;
       }
 
       body {
         background: white;
-        margin: 0;
         padding: 0;
+        margin: 0;
       }
 
-      .container {
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
+      .invoice-container {
         box-shadow: none;
+        padding: 0;
       }
 
-      .print-btn {
+      .print-button {
         display: none;
       }
 
-      /* Make header visible and repeat on each page */
-      .header-img {
+      /* Repeat header on every page */
+      .header {
         display: block;
-        page-break-after: avoid;
       }
 
-      /* Ensure table can break across pages */
-      .items-table {
-        page-break-before: auto;
-        page-break-after: auto;
+      /* Allow tables to break across pages */
+      table {
         page-break-inside: auto;
       }
 
-      .items-table thead {
-        display: table-header-group;
-      }
-
-      .items-table tbody {
-        display: table-row-group;
-      }
-
-      .items-table tr {
+      tr {
         page-break-inside: avoid;
         page-break-after: auto;
       }
 
-      /* Keep footer sections together */
-      .totals-section {
+      thead {
+        display: table-header-group;
+      }
+
+      /* Keep totals together */
+      .totals-wrapper {
         page-break-inside: avoid;
       }
 
-      .signatures {
-        page-break-inside: avoid;
-      }
-
-      .note {
+      .footer {
         page-break-inside: avoid;
       }
     }
   </style>
 </head>
 <body>
-  <button class="print-btn" onclick="window.print()">🖨️ Print Invoice</button>
+  <button class="print-button" onclick="window.print()">🖨️ Print Invoice</button>
 
-  <div class="container">
-    <!-- Header Image -->
-    <img class="header-img" src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header">
+  <div class="invoice-container">
+    <!-- Header -->
+    <div class="header">
+      <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header">
+    </div>
 
     <!-- Title -->
     <div class="title">
       <h2>វិក្កយបត្រពន្ធ<br>TAX INVOICE</h2>
     </div>
 
-    <!-- Invoice Header -->
-    <div class="invoice-header">
-      <!-- Customer Info -->
-      <div class="customer-box">
-        <table>
+    <!-- Invoice Info -->
+    <div class="invoice-info">
+      <!-- Left: Customer Info -->
+      <div class="left">
+        <table class="no-border">
           <tr><td>ឈ្មោះក្រុមហ៊ុន៖ <span id="customer_name_kh"></span></td></tr>
           <tr><td>Customer: <span id="customer_name"></span></td></tr>
           <tr><td>អាសយដ្ឋាន៖ <span id="address_kh"></span></td></tr>
@@ -306,9 +291,9 @@
         </table>
       </div>
 
-      <!-- Invoice Meta -->
-      <div class="invoice-meta">
-        <table>
+      <!-- Right: Invoice Info -->
+      <div class="right">
+        <table class="no-border invoice-meta" style="float: right;">
           <tr>
             <td>
               <div class="kh-label">លេខវិក្កយបត្រ</div>
@@ -334,8 +319,8 @@
     </div>
 
     <!-- Shipment Info -->
-    <div class="shipment-info">
-      <table>
+    <div class="section">
+      <table class="shipment-info">
         <tr>
           <td>IMP/EXP: <span id="lot_no"></span></td>
           <td>Flight Date: <span id="flight_date"></span></td>
@@ -360,58 +345,56 @@
     </div>
 
     <!-- Items Table -->
-    <table class="items-table">
+    <table>
       <thead>
         <tr>
-          <th style="width: 5%;" class="text-center">ល.រ<br>No</th>
+          <th style="width: 5%; text-align: center;">ល.រ<br>No</th>
           <th style="width: 40%;">បរិយាយមុខទំនិញ<br>Description</th>
           <th style="width: 20%;"></th>
-          <th style="width: 10%;" class="text-center">បរិមាណ<br>Quantity</th>
+          <th style="width: 10%; text-align: center;">បរិមាណ<br>Quantity</th>
           <th style="width: 12%;">តម្លៃឯកតា<br>Unit Price</th>
           <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
         </tr>
       </thead>
       <tbody id="items_tbody">
-        <!-- Items inserted here -->
+        <!-- Items will be inserted here -->
       </tbody>
     </table>
 
-    <!-- Totals -->
-    <div class="totals-section">
-      <div class="exchange-rate">
+    <!-- Totals Section -->
+    <div class="totals-wrapper">
+      <div class="exchange">
         អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
       </div>
       
-      <div class="totals-table">
-        <table>
-          <tr>
-            <td>សរុប / Subtotal:</td>
-            <td class="text-right" id="subtotal">$0.00</td>
-          </tr>
-          <tr>
-            <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
-            <td class="text-right" id="vat_amount">$0.00</td>
-          </tr>
-          <tr class="total-row">
-            <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
-            <td class="text-right" id="grand_total">$0.00</td>
-          </tr>
-          <tr>
-            <td>សរុបរួមជារៀល / Grand Total KHR:</td>
-            <td class="text-right" id="grand_total_khr">៛0.00</td>
-          </tr>
-        </table>
-      </div>
+      <table class="totals">
+        <tr>
+          <td>សរុប / Subtotal:</td>
+          <td id="subtotal">$0.00</td>
+        </tr>
+        <tr>
+          <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
+          <td id="vat_amount">$0.00</td>
+        </tr>
+        <tr class="bold">
+          <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
+          <td id="grand_total">$0.00</td>
+        </tr>
+        <tr>
+          <td>សរុបរួមជារៀល / Grand Total KHR:</td>
+          <td id="grand_total_khr">៛0.00</td>
+        </tr>
+      </table>
     </div>
 
     <!-- Signatures -->
-    <div class="signatures">
-      <div class="signature-box">
+    <div class="footer">
+      <div class="signature">
         <div class="signature-line"></div>
         <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
       </div>
       
-      <div class="signature-box">
+      <div class="signature">
         <div class="signature-line"></div>
         <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
       </div>
@@ -424,6 +407,7 @@
   </div>
 
   <script>
+    // Parse URL parameters
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       const data = {};
@@ -433,9 +417,11 @@
       return data;
     }
 
+    // Populate invoice data
     function populateInvoice() {
       const data = getUrlParams();
       
+      // Simple fields
       const fields = [
         'customer_name_kh', 'customer_name', 'address_kh', 'address',
         'phone', 'vat_tin', 'invoice_no', 'date', 'lot_no', 'flight_date',
@@ -445,20 +431,21 @@
       ];
       
       fields.forEach(field => {
-        const el = document.getElementById(field);
-        if (el && data[field]) {
-          el.textContent = data[field];
+        const element = document.getElementById(field);
+        if (element && data[field]) {
+          element.textContent = data[field];
         }
       });
 
+      // Handle line items
       const tbody = document.getElementById('items_tbody');
       tbody.innerHTML = '';
       
       if (data.items) {
         try {
           const items = JSON.parse(data.items);
-          items.forEach((item, idx) => {
-            addItemRow(idx + 1, item);
+          items.forEach((item, index) => {
+            addItemRow(index + 1, item);
           });
         } catch (e) {
           console.error('Error parsing items:', e);
@@ -482,12 +469,12 @@
       const row = tbody.insertRow();
       
       row.innerHTML = `
-        <td class="text-center">${no}</td>
+        <td style="text-align: center;">${no}</td>
         <td>${item.item_name} ${item.item_name_kh || ''}</td>
         <td>${item.remarks || ''}</td>
-        <td class="text-center">${item.qty || ''}</td>
-        <td class="text-right">${item.rate || ''}</td>
-        <td class="text-right">${item.amount || ''}</td>
+        <td style="text-align: center;">${item.qty || ''}</td>
+        <td class="right">${item.rate || ''}</td>
+        <td class="right">${item.amount || ''}</td>
       `;
     }
 
