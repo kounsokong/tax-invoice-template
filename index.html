@@ -211,11 +211,20 @@
       background: #0056b3;
     }
 
+    /* Page break styling */
+    .page-break {
+      display: none;
+    }
+
+    .cloned-header {
+      display: none;
+    }
+
     /* Print Styles */
     @media print {
       @page {
         size: A4;
-        margin: 0;
+        margin: 15mm 10mm;
       }
 
       body {
@@ -225,36 +234,28 @@
       }
 
       .invoice-container {
-        width: 210mm;
+        width: 100%;
         margin: 0;
         box-shadow: none;
         padding: 0;
-        padding-top: 130px;
       }
 
       .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        height: 120px;
-        background: white;
-        z-index: 1000;
-        padding: 10px;
-        margin: 0;
-      }
-
-      .header img {
-        max-height: 100px;
-      }
-
-      .title {
-        margin-top: 10px;
+        display: table-header-group;
+        page-break-after: avoid;
       }
 
       .print-button {
         display: none;
+      }
+
+      /* Show page breaks and cloned headers */
+      .page-break {
+        display: block;
+      }
+
+      .cloned-header {
+        display: block;
       }
 
       /* Allow tables to break across pages */
@@ -269,6 +270,10 @@
 
       thead {
         display: table-header-group;
+      }
+
+      tbody {
+        display: table-row-group;
       }
 
       /* Keep totals together */
@@ -496,6 +501,78 @@
         <td class="right">${item.amount || ''}</td>
       `;
     }
+
+    // Function to create page breaks with headers
+    function createPrintPages() {
+      const container = document.querySelector('.invoice-container');
+      const header = document.querySelector('.header');
+      const headerHeight = 140; // Height of header in pixels (approx 37mm)
+      const pageHeight = 1120; // A4 page height in pixels at 96dpi (297mm)
+      const usableHeight = pageHeight - headerHeight - 60; // Space for header and margins
+      
+      // Get all direct children
+      const children = Array.from(container.children);
+      let currentHeight = 0;
+      let pageNumber = 1;
+      
+      children.forEach((child, index) => {
+        // Skip the header itself
+        if (child.classList.contains('header')) {
+          return;
+        }
+        
+        const childHeight = child.offsetHeight;
+        
+        // Check if we need a new page
+        if (currentHeight + childHeight > usableHeight && pageNumber === 1) {
+          // Insert page break and duplicate header
+          const pageBreak = document.createElement('div');
+          pageBreak.className = 'page-break';
+          pageBreak.style.pageBreakBefore = 'always';
+          pageBreak.style.paddingTop = '20px';
+          
+          // Clone header
+          const headerClone = header.cloneNode(true);
+          headerClone.classList.add('cloned-header');
+          pageBreak.appendChild(headerClone);
+          
+          container.insertBefore(pageBreak, child);
+          currentHeight = headerHeight;
+          pageNumber++;
+        } else if (currentHeight + childHeight > usableHeight) {
+          // Subsequent pages
+          const pageBreak = document.createElement('div');
+          pageBreak.className = 'page-break';
+          pageBreak.style.pageBreakBefore = 'always';
+          pageBreak.style.paddingTop = '20px';
+          
+          const headerClone = header.cloneNode(true);
+          headerClone.classList.add('cloned-header');
+          pageBreak.appendChild(headerClone);
+          
+          container.insertBefore(pageBreak, child);
+          currentHeight = headerHeight;
+          pageNumber++;
+        }
+        
+        currentHeight += childHeight;
+      });
+    }
+
+    // Function to remove page breaks (for screen view)
+    function removePrintPages() {
+      const pageBreaks = document.querySelectorAll('.page-break');
+      pageBreaks.forEach(pb => pb.remove());
+    }
+
+    // Add print event listeners
+    window.addEventListener('beforeprint', () => {
+      createPrintPages();
+    });
+
+    window.addEventListener('afterprint', () => {
+      removePrintPages();
+    });
 
     window.onload = populateInvoice;
   </script>
