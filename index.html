@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tax Invoice - Angkobodia Logistics Co., Ltd</title>
   <style>
     body {
@@ -17,15 +17,20 @@
 
     .invoice-container {
       width: 210mm;
-      margin: 20px auto;
+      margin: 0 auto;
       background: white;
       padding: 10mm;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
       text-align: center;
-      margin-bottom: 10px;
+      z-index: 100;
+      background: white;
     }
 
     .header img {
@@ -33,6 +38,11 @@
       max-height: 110px;
       object-fit: contain;
       display: block;
+    }
+
+    /* push content below fixed header */
+    .content {
+      margin-top: 120px; /* same as header height */
     }
 
     .title {
@@ -158,7 +168,6 @@
 
     .totals td:last-child {
       text-align: right;
-      font-weight: normal;
       min-width: 120px;
     }
 
@@ -220,9 +229,7 @@
 
       body {
         background: white;
-        padding: 0;
         margin: 0;
-        margin-top: 130px; /* Adjust for header height */
       }
 
       .invoice-container {
@@ -235,7 +242,25 @@
         display: none;
       }
 
-      /* Allow content to break across pages */
+      /* Repeat header on each printed page */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+      }
+
+      .header img {
+        width: 100%;
+        max-height: 110px;
+      }
+
+      /* Ensure content starts below header */
+      .content {
+        margin-top: 120px !important;
+      }
+
       table, tr, td {
         page-break-inside: auto !important;
       }
@@ -252,42 +277,25 @@
       .totals-wrapper, .footer {
         page-break-inside: avoid;
       }
-
-      /* Repeat letterhead on every page */
-      .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        z-index: 100;
-      }
-
-      .header img {
-        width: 100%;
-        max-height: 110px;
-        object-fit: contain;
-      }
     }
   </style>
 </head>
 <body>
   <button class="print-button" onclick="window.print()">🖨️ Print Invoice</button>
 
-  <div class="invoice-container">
-    <!-- Header -->
-    <div class="header">
-      <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header">
-    </div>
+  <!-- Fixed Header -->
+  <div class="header">
+    <img src="https://github.com/kounsokong/tax-invoice-template/blob/main/angkobodia_logo.jpg?raw=true" alt="Company Header" />
+  </div>
 
-    <!-- Title -->
+  <!-- Content Starts Below Header -->
+  <div class="invoice-container content">
+
     <div class="title">
       <h2>វិក្កយបត្រពន្ធ<br>TAX INVOICE</h2>
     </div>
 
-    <!-- Invoice Info -->
     <div class="invoice-info">
-      <!-- Left: Customer Info -->
       <div class="left">
         <table class="no-border">
           <tr><td>ឈ្មោះក្រុមហ៊ុន៖ <span id="customer_name_kh"></span></td></tr>
@@ -299,7 +307,6 @@
         </table>
       </div>
 
-      <!-- Right: Invoice Info -->
       <div class="right">
         <table class="no-border invoice-meta" style="float: right;">
           <tr>
@@ -326,7 +333,6 @@
       </div>
     </div>
 
-    <!-- Shipment Info -->
     <div class="section">
       <table class="shipment-info">
         <tr>
@@ -352,7 +358,6 @@
       </table>
     </div>
 
-    <!-- Items Table -->
     <table>
       <thead>
         <tr>
@@ -364,44 +369,27 @@
           <th style="width: 13%;">តម្លៃសរុប<br>Amount (USD)</th>
         </tr>
       </thead>
-      <tbody id="items_tbody">
-        <!-- Items will be inserted here -->
-      </tbody>
+      <tbody id="items_tbody"></tbody>
     </table>
 
-    <!-- Totals Section -->
     <div class="totals-wrapper">
       <div class="exchange">
         អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
       </div>
       
       <table class="totals">
-        <tr>
-          <td>សរុប / Subtotal:</td>
-          <td id="subtotal">$0.00</td>
-        </tr>
-        <tr>
-          <td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td>
-          <td id="vat_amount">$0.00</td>
-        </tr>
-        <tr class="bold">
-          <td>សរុបរួមជាដុល្លារ / Grand Total USD:</td>
-          <td id="grand_total">$0.00</td>
-        </tr>
-        <tr>
-          <td>សរុបរួមជារៀល / Grand Total KHR:</td>
-          <td id="grand_total_khr">៛0.00</td>
-        </tr>
+        <tr><td>សរុប / Subtotal:</td><td id="subtotal">$0.00</td></tr>
+        <tr><td>អាករលើតម្លៃបន្ថែម (VAT 10%):</td><td id="vat_amount">$0.00</td></tr>
+        <tr class="bold"><td>សរុបរួមជាដុល្លារ / Grand Total USD:</td><td id="grand_total">$0.00</td></tr>
+        <tr><td>សរុបរួមជារៀល / Grand Total KHR:</td><td id="grand_total_khr">៛0.00</td></tr>
       </table>
     </div>
 
-    <!-- Signatures -->
     <div class="footer">
       <div class="signature">
         <div class="signature-line"></div>
         <p>Customer's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអតិថិជន</p>
       </div>
-      
       <div class="signature">
         <div class="signature-line"></div>
         <p>Seller's Signature & Name<br>ហត្ថលេខា និងឈ្មោះអ្នកលក់</p>
@@ -415,55 +403,45 @@
   </div>
 
   <script>
-    // Parse URL parameters
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       const data = {};
-      for (const [key, value] of params) {
-        data[key] = decodeURIComponent(value);
-      }
+      for (const [key, value] of params) data[key] = decodeURIComponent(value);
       return data;
     }
 
-    // Populate invoice data
     function populateInvoice() {
       const data = getUrlParams();
       const fields = [
-        'customer_name_kh', 'customer_name', 'address_kh', 'address',
-        'phone', 'vat_tin', 'invoice_no', 'date', 'lot_no', 'flight_date',
-        'factory_name', 'declaration', 'vessel', 'port', 'cargo_type',
-        'container', 'hbl', 'etd', 'qty', 'invpl', 'subtotal',
-        'vat_amount', 'grand_total', 'grand_total_khr', 'exchange_rate'
+        'customer_name_kh','customer_name','address_kh','address',
+        'phone','vat_tin','invoice_no','date','lot_no','flight_date',
+        'factory_name','declaration','vessel','port','cargo_type',
+        'container','hbl','etd','qty','invpl','subtotal',
+        'vat_amount','grand_total','grand_total_khr','exchange_rate'
       ];
-      
-      fields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element && data[field]) element.textContent = data[field];
+      fields.forEach(f=>{
+        const el=document.getElementById(f);
+        if(el&&data[f])el.textContent=data[f];
       });
 
-      // Handle line items
-      const tbody = document.getElementById('items_tbody');
-      tbody.innerHTML = '';
-      if (data.items) {
-        try {
-          const items = JSON.parse(data.items);
-          tbody.innerHTML = items.map((item, i) => `
+      const tbody=document.getElementById('items_tbody');
+      tbody.innerHTML='';
+      if(data.items){
+        try{
+          const items=JSON.parse(data.items);
+          tbody.innerHTML=items.map((it,i)=>`
             <tr>
-              <td style="text-align:center;">${i + 1}</td>
-              <td>${item.item_name} ${item.item_name_kh || ''}</td>
-              <td>${item.remarks || ''}</td>
-              <td style="text-align:center;">${item.qty || ''}</td>
-              <td class="right">${item.rate || ''}</td>
-              <td class="right">${item.amount || ''}</td>
-            </tr>
-          `).join('');
-        } catch (e) {
-          console.error('Error parsing items:', e);
-        }
+              <td style="text-align:center;">${i+1}</td>
+              <td>${it.item_name||''} ${it.item_name_kh||''}</td>
+              <td>${it.remarks||''}</td>
+              <td style="text-align:center;">${it.qty||''}</td>
+              <td class="right">${it.rate||''}</td>
+              <td class="right">${it.amount||''}</td>
+            </tr>`).join('');
+        }catch(e){console.error('Item parse error',e);}
       }
     }
-
-    window.onload = populateInvoice;
+    window.onload=populateInvoice;
   </script>
 </body>
 </html>
