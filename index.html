@@ -344,8 +344,9 @@
 
       <div class="exchange">
         អត្រាប្តូរប្រាក់ / Exchange Rate: <span id="exchange_rate">4,000</span>
-        <div style="margin-top: 10px;">
-          Remarks: <span id="remarks"></span>
+         <div style="margin-top: 10px;">
+          <div style="font-weight: bold;">Remarks:</div>
+          <div id="remarks" style="white-space: pre-wrap; margin-top: 5px; max-width: 100%;"></div>
         </div>
       </div>
 
@@ -392,12 +393,17 @@
         'vat_amount', 'grand_total', 'grand_total_khr', 'exchange_rate', 'remarks'
       ];
       
-      fields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element && data[field]) {
-          element.textContent = data[field];
-        }
-      });
+        fields.forEach(field => {
+                const el = document.getElementById(field);
+                if (el && data[field]) {
+                  if (field === 'remarks') {
+                    // Handle LongText with line breaks
+                    el.innerHTML = data[field].replace(/\n/g, '<br>');
+                  } else {
+                    el.textContent = data[field];
+                  }
+                }
+              });
 
       // Handle line items (support multiple items)
       const tbody = document.getElementById('items_tbody');
